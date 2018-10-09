@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>ServletDemo</display-name>
+  
+  <!-- Context Param: initializes variable for all servlets -->
+  <context-param>
+  	<param-name>DefaultName</param-name>
+  	<param-value>bob</param-value>
+  </context-param>
+  
+  <!-- servlet element is for a key-value pair: servlet-name is the key, and servlet-class is the location -->
+  <servlet>
+  	<servlet-name>demo</servlet-name>
+  	<servlet-class>com.revature.servlet.DemoServlet</servlet-class>
+  	<!-- Init Config Param: initializes variable for this servlet -->
+  	<init-param>
+  		<param-name>DefaultAge</param-name>
+  		<param-value>18</param-value>
+  	</init-param>
+  	<load-on-startup>0</load-on-startup>
+  </servlet>
+  
+  <servlet>
+  	<servlet-name>forred</servlet-name>
+  	<servlet-class>com.revature.servlet.ForredServlet</servlet-class>
+  </servlet>
+  
+  <!-- servlet mapping element is a key-value pair for a url to point to a servlet above -->
+  <servlet-mapping>
+  	<servlet-name>demo</servlet-name>
+  	<url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>forred</servlet-name>
+  	<url-pattern>/forred</url-pattern>
+  </servlet-mapping>
+</web-app>
