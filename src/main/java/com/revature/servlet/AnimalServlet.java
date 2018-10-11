@@ -17,24 +17,87 @@ import com.revature.repository.AnimalDao;
 import com.revature.service.AnimalService;
 
 @SuppressWarnings("serial")
-@WebServlet("/animals")
+@WebServlet("/animals/*")
 public class AnimalServlet extends HttpServlet {
 	
 	AnimalDao dao = new AnimalDao();
 	AnimalService aService = new AnimalService(dao);
 	
+	// For GET /animals/
+	// GET /animals/123
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
+		String path = req.getPathInfo();
+		
 		resp.setContentType("text/xml");
 		PrintWriter pw = resp.getWriter();
-//		pw.println(aService.getAnimals());
-//		pw.close();
+		
+		List<Animal> animals = aService.getAnimals();
+		ObjectMapper om = new XmlMapper();
+		
+		if(path == null || path.equals("/")) {
+			String obj = om.writeValueAsString(animals);
+			pw.println(obj);
+			return;
+		}
+		
+		String[] pathSplits = path.split("/");
+		
+		if(pathSplits.length != 2) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		
+		int animalId = Integer.parseInt(pathSplits[1]);
+		Animal found = null;
+		for (Animal a : animals) {
+			if (a.getId() == animalId) {
+				found = a;
+			}
+		}
+		
+		if(found != null) {
+			String obj = om.writeValueAsString(found);
+			pw.println(obj);
+		}
+		
+		pw.close();
+	}
+	
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		Animal input = new Animal(0, "T", 5, 5);
+		
+		aService.createAnimal(input);
+	}
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		String path = req.getPathInfo();
+		
+		resp.setContentType("text/xml");
+		
 		List<Animal> animals = aService.getAnimals();
 		
-		ObjectMapper om = new XmlMapper();
-		String obj = om.writeValueAsString(animals.get(0));
-		pw.println(obj);
-		pw.close();
+		String[] pathSplits = path.split("/");
+		
+		if(pathSplits.length != 2) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		
+		int animalId = Integer.parseInt(pathSplits[1]);
+		Animal found = null;
+		for (Animal a : animals) {
+			if (a.getId() == animalId) {
+				found = a;
+			}
+		}
+		
+		if(found != null) {
+			aService.deleteAnimal(found);
+		}
 	}
 }

@@ -16,6 +16,38 @@ import oracle.jdbc.internal.OracleTypes;
 
 public class AnimalDao {
 	
+	public void deleteAnimal(Animal a) {
+		PreparedStatement ps = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "Delete from Animals where id = ?";
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, a.getId());
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
+	public void createAnimal(Animal a) {
+		PreparedStatement ps = null;
+		try(Connection conn = ConnectionUtil.getConnection()) {
+			String sql = "Insert into Animals (name, age, legs) values (?, ?, ?)";
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, a.getName());
+			ps.setInt(2, a.getAge());
+			ps.setInt(3, a.getLegs());
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException ex) {
+			ex.getMessage();
+		} catch (IOException ex) {
+			ex.getMessage();
+		}
+	}
+	
 	public List<Animal> getAnimals() {
 		PreparedStatement ps = null;
 		Animal a = null;
