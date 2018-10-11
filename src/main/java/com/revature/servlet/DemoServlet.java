@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @SuppressWarnings("serial")
 public class DemoServlet extends HttpServlet {
@@ -15,6 +16,12 @@ public class DemoServlet extends HttpServlet {
 		PrintWriter pw = resp.getWriter();
 		String arg1 = req.getParameter("name");
 		String arg2 = req.getParameter("age");
+		
+		HttpSession session = req.getSession(false);
+		
+		if(session != null)
+			arg1 = (String) session.getAttribute("username");
+		
 		if (arg1 == null)
 			arg1 = getServletContext().getInitParameter("DefaultName");
 		if (arg2 == null)
